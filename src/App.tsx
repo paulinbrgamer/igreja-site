@@ -18,7 +18,7 @@ export default function App() {
       >
         <div className="sticky flex flex-row-reverse gap-2 items-center mr-8">
           <h1 className="text-2xl font-bold">Igreja Batista Karismática</h1>
-          <img src="../public/icon-igreja.png" alt="Logo da Igreja" className="h-10 mt-2 mx-auto"/>
+          <img src="icon-igreja.png" alt="Logo da Igreja" className="h-10 mt-2 mx-auto"/>
         </div>
         <div className="flex gap-5 items-center justify-center">
           <Link to="/" className={`hover:text-zinc-300 ${location.pathname === "/" ? currentPageStyle : ""}`}>Início</Link>
