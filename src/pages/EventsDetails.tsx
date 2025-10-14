@@ -2,43 +2,27 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, CalendarDays, MapPin } from "lucide-react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
 
 // 🔹 Exemplo de dados — substitua depois por fetch da API/Supabase
-const eventsData = [
-  {
-    id: "1",
-    title: "Culto da Família",
-    date: "2025-10-20",
-    location: "Igreja Batista Karismática - Auditório Principal",
-    image: "https://placehold.co/800x400?text=Culto+da+Família",
-    description:
-      "Um culto especial dedicado à família, com louvores, mensagens edificantes e momentos de comunhão. Venha celebrar conosco e fortalecer os laços familiares na presença de Deus.",
-  },
-  {
-    id: "2",
-    title: "Noite de Louvor",
-    date: "2025-11-05",
-    location: "Igreja Batista Karismática - Salão Central",
-    image: "https://placehold.co/800x400?text=Noite+de+Louvor",
-    description:
-      "Uma noite de adoração e entrega total. Louvores inspiradores, ministração poderosa e presença marcante do Espírito Santo.",
-  },
-  {
-    id: "3",
-    title: "Retiro Espiritual 2025",
-    date: "2025-12-10",
-    location: "Sítio Esperança - Serra Verde",
-    image: "https://placehold.co/800x400?text=Retiro+Espiritual",
-    description:
-      "Um fim de semana de renovação espiritual, comunhão e crescimento pessoal. Reserve seu lugar e viva dias de transformação.",
-  },
-];
+
 
 export default function EventDetails() {
   const { id } = useParams();
+  const [event, setevent] = useState<any>([])
   const navigate = useNavigate();
 
-  const event = eventsData.find((e) => e.id === id);
+  useEffect(() => {
+      const fetchEvent = async ()=>{
+      const {data} =  await supabase.from('eventos').select("*").eq('id',id).single()
+      console.log(data);
+      
+      setevent(data)
+      } 
+      fetchEvent()
+  }, [])
+  
 
   if (!event) {
     return (
@@ -93,7 +77,7 @@ export default function EventDetails() {
               })}
             </span>
             <span className="flex items-center gap-1">
-              <MapPin className="w-4 h-4 text-primary" /> {event.location}
+              <MapPin className="w-4 h-4 text-primary" /> {event.address  }
             </span>
           </div>
 
