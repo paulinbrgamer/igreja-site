@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Loader2, Save, Trash, Upload } from "lucide-react";
+import { Loader2, Save, Trash} from "lucide-react";
 import { useAuthStore } from "@/store/authStore";
 
 const EditEvent = () => {

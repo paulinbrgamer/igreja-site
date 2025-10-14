@@ -1,7 +1,7 @@
 import { type FC, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Clock, Users, Link, Trash2, Calendar, MapPin, Plus } from "lucide-react"; // Adicionei ícones úteis
+import { Clock,  Link, Trash2, Plus } from "lucide-react"; // Adicionei ícones úteis
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"; // Importado Card
 import { Input } from "@/components/ui/input"; // Importado Input
 import { Separator } from "@/components/ui/separator"; // Importado Separator
