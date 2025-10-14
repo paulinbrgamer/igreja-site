@@ -190,7 +190,7 @@ const Events = () => {
                         className="bg-white/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
                       >
                         <img
-                          src={`https://placehold.co/600x400?text=${event.title}`}
+                          src={event.img_path? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
                           alt={event.title}
                           className="w-full h-100 object-cover"
                         />

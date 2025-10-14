@@ -24,7 +24,8 @@ interface eventosSpeciais {
   title: string,
   description: string,
   hour: string,
-  address: string
+  address: string,
+  img_path : string
 }
 
 interface AdminDashboardProps {
@@ -225,7 +226,7 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout })
                     className="bg-white/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 max-w-[360px] w-full flex flex-col"
                   >
                     <img
-                      src={`https://placehold.co/600x400?text=${event.title}`}
+                      src={event.img_path? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
                       alt={event.title}
                       className="w-full h-56 object-cover"
                     />

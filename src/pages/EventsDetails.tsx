@@ -1,7 +1,7 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CalendarDays, MapPin } from "lucide-react";
+import { ArrowLeft, CalendarDays, Clock, MapPin } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -56,7 +56,7 @@ export default function EventDetails() {
 
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
         <motion.img
-          src={event.image}
+          src={event.img_path? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
           alt={event.title}
           className="w-full h-[400px] object-cover"
           initial={{ scale: 1.05 }}
@@ -75,6 +75,11 @@ export default function EventDetails() {
                 month: "long",
                 year: "numeric",
               })}
+              
+            </span>
+            <span className="flex justify-center items-center gap-1">
+              <Clock className="w-4 h-4 text-primary"/>{" "}
+              <p>{event.hour}</p>
             </span>
             <span className="flex items-center gap-1">
               <MapPin className="w-4 h-4 text-primary" /> {event.address  }
