@@ -3,9 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Bird, Copy, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-
+import QR_CODE_URL from "../../public/qrcode-donate.jpeg"
 const PIX_KEY = "ibkcora@gmail.com"; // sua chave PIX
-const QR_CODE_URL = "qrcode-donate.jpeg"; // URL do QR code gerado (exemplo)
 
 export default function DonateButton() {
   const [open, setOpen] = useState(false);

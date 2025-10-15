@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-
+import icone_igreja from "../../public/icon-igreja.png"
 const currentPageStyle = "border-b-2 border-white font-bold"; 
 
 // Lista de links para evitar repetição de código
@@ -33,7 +33,7 @@ const Navbar = () => {
             >
                 {/* Logo e Título */}
                 <div className="flex items-center cursor-pointer" onClick={()=>navigate("/")}>
-                    <img src="icon-igreja.png" alt="Logo da Igreja" className="h-10 mx-auto mr-2"/>
+                    <img src={icone_igreja}alt="Logo da Igreja" className="h-10 mx-auto mr-2"/>
                     <h1 className="text-xl lg:text-2xl font-bold whitespace-nowrap">
                         Igreja Batista Karismática
                     </h1>

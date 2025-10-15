@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useAuthStore } from "@/store/authStore"
 import { useState } from "react"
-
+import icone_igreja from "/public/icone-igreja-white.png"
 export default function Auth() {
   const { login } = useAuthStore();
   const [loginFail, setloginFail] = useState("")
@@ -34,7 +34,7 @@ export default function Auth() {
       >
         <Card className="mx-auto max-w-sm w-[360px]  backdrop-blur-md bg-white/90 shadow-xl border border-zinc-200">
           <CardHeader className="space-y-1 pt-2 text-start">
-            <img src="/public/icone-igreja-white.png" title="icone-igreja" className="w-40 m-auto mb-6" />
+            <img src={icone_igreja} title="icone-igreja" className="w-40 m-auto mb-6" />
             <CardTitle className="text-2xl font-bold text-zinc-800">
               Entrar
             </CardTitle>
