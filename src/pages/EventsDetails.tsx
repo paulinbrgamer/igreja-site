@@ -14,15 +14,15 @@ export default function EventDetails() {
   const navigate = useNavigate();
 
   useEffect(() => {
-      const fetchEvent = async ()=>{
-      const {data} =  await supabase.from('eventos').select("*").eq('id',id).single()
+    const fetchEvent = async () => {
+      const { data } = await supabase.from('eventos').select("*").eq('id', id).single()
       console.log(data);
-      
+
       setevent(data)
-      } 
-      fetchEvent()
+    }
+    fetchEvent()
   }, [])
-  
+
 
   if (!event) {
     return (
@@ -56,9 +56,9 @@ export default function EventDetails() {
 
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
         <motion.img
-          src={event.img_path? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
+          src={event.img_path ? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
           alt={event.title}
-          className="w-full h-140  object-cover"
+          className="w-full h-140  lg : object-contain lg:object-cover"
           initial={{ scale: 1.05 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -70,19 +70,20 @@ export default function EventDetails() {
           <div className="flex flex-wrap items-center gap-4 text-zinc-600 text-sm">
             <span className="flex items-center gap-1">
               <CalendarDays className="w-4 h-4 text-primary" />{" "}
-              {new Date(event.date).toLocaleDateString("pt-BR", {
+              {new Date(`${event.date}T00:00:00`).toLocaleDateString("pt-BR", {
                 day: "2-digit",
                 month: "long",
                 year: "numeric",
               })}
-              
+
+
             </span>
             <span className="flex justify-center items-center gap-1">
-              <Clock className="w-4 h-4 text-primary"/>{" "}
+              <Clock className="w-4 h-4 text-primary" />{" "}
               <p>{event.hour}</p>
             </span>
             <span className="flex items-center gap-1">
-              <MapPin className="w-4 h-4 text-primary" /> {event.address  }
+              <MapPin className="w-4 h-4 text-primary" /> {event.address}
             </span>
           </div>
 

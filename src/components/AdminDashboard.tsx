@@ -9,6 +9,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { supabase } from "@/lib/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { intParaDiaSemana } from "@/pages/Events";
+import { toast } from "sonner";
 
 // --- INTERFACES (Mantidas) ---
 interface agendaSemanal {
@@ -36,13 +37,16 @@ interface AdminDashboardProps {
 
 export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout }) => {
   const navigate = useNavigate()
-  const [liveLink, setLiveLink] = useState("");
   const [Agenda, setAgenda] = useState<agendaSemanal[]>([]);
   const [eventos, setEventos] = useState<eventosSpeciais[]>();
   const [users, setUsers] = useState<string[]>(["joao@example.com", "maria@example.com"]);
 
   const fadeInUp = { initial: { y: 20, opacity: 0 }, animate: { y: 0, opacity: 1 } };
-
+  const handleSetLinkLive = async(link:string)=>{
+    const {error} = await supabase.from('youtube_connection').update({link_live : link}).eq('id',0)
+    if (error) return toast("Erro",error.message)
+    toast("Live adicionada")
+  }
   // --- FUNÇÕES DE ADMIN ---
   const handleAddUser = () => {
     const email = prompt("Digite o e-mail do novo usuário:");
@@ -53,11 +57,7 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout })
     if (confirm(`Remover o usuário ${email}?`)) setUsers(prev => prev.filter(u => u !== email));
   };
 
-  const handleSaveLiveLink = () => {
-    alert(`Novo link salvo (Ação Mockada): ${liveLink}`);
-    // Aqui você faria a chamada real ao supabase:
-    // await supabase.from('settings').update({ live_url: liveLink });
-  };
+
   const handleRemoveCulto = async (id: number) => {
     await supabase.from("semanal").delete().eq('id', id)
     const newAgenda = Agenda.filter((a) => a.id != id)
@@ -124,13 +124,12 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout })
                 <Input
                   type="url"
                   placeholder="Cole o link da live/vídeo aqui"
-                  value={liveLink}
-                  onChange={(e) => setLiveLink(e.target.value)}
                   className="border-zinc-400 focus:border-black"
+                  id="input-link"
                 />
                 <Button
                   className="bg-zinc-900 hover:bg-zinc-700"
-                  onClick={handleSaveLiveLink}
+                  onClick={(e) => handleSetLinkLive(document.getElementById('input-link').value)}
                 >
                   <Link className="w-5 h-5 mr-2" /> Salvar Link
                 </Button>

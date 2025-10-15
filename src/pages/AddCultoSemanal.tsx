@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -25,6 +25,10 @@ const AddCultoSemanal = () => {
   const [isSpecial, setIsSpecial] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+useEffect(() => {
+  console.log(hour);
+  
+}, [hour])
 
   // Upload da imagem para Supabase Storage
   const uploadImage = async (file: File): Promise<string | null> => {

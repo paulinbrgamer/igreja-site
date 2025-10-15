@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Filter, X, CalendarClock } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabaseClient';
+
 export function intParaDiaSemana(n: number) {
   const dias = [
     "Segunda-feira",
@@ -15,10 +16,8 @@ export function intParaDiaSemana(n: number) {
     "Sábado",
     "Domingo"
   ];
-
-  return dias[n - 1] || null; // retorna null se n não estiver entre 1 e 7
+  return dias[n - 1] || null;
 }
-
 
 interface agendaSemanal {
   id: number,
@@ -29,6 +28,7 @@ interface agendaSemanal {
   isSpecial: boolean,
   img_path: string
 }
+
 interface eventosSpeciais {
   id: number,
   date: string,
@@ -39,15 +39,12 @@ interface eventosSpeciais {
   img_path: string
 }
 
-
-
-
 const Events = () => {
   const navigate = useNavigate()
-  const [filterDate, setFilterDate] = useState('');
   const [Agenda, setAgenda] = useState<agendaSemanal[]>([])
   const [eventos, setEventos] = useState<eventosSpeciais[]>([])
-  const filteredEvents = eventos.filter(e => !filterDate || e.date === filterDate);
+  const [selectedEvent, setSelectedEvent] = useState<agendaSemanal | null>(null)
+
 
   const fadeInUp = {
     initial: { y: 20, opacity: 0 },
@@ -57,27 +54,22 @@ const Events = () => {
   useEffect(() => {
     const fetchAgenda = async () => {
       const { data, error } = await supabase.from('semanal').select("*").order("day_week").order("hour");
-      if (!error && data) {
-        setAgenda(data)
-      }
+      if (!error && data) setAgenda(data);
     };
     const fetchEventos = async () => {
       const { data, error } = await supabase.from('eventos').select("*").order("date");
-      if (!error && data) {
-        setEventos(data)
-      }
+      if (!error && data) setEventos(data);
     };
     fetchAgenda();
     fetchEventos();
   }, []);
-
 
   return (
     <motion.div
       initial="initial"
       animate="animate"
       variants={{ animate: { transition: { staggerChildren: 0.1 } } }}
-      className="pt-[72px] min-h-screen bg-gradient-to-b from-white to-zinc-50 text-zinc-900"
+      className="pt-[72px] min-h-screen bg-gradient-to-b from-white to-zinc-50 text-zinc-900 relative"
     >
       {/* HEADER */}
       <div className="bg-gradient-to-r from-zinc-900 via-black to-zinc-800 text-white p-16 text-center shadow-md">
@@ -96,45 +88,32 @@ const Events = () => {
           Cultos
         </motion.h2>
 
-        <Carousel
-          opts={{
-            align: "center",
-            loop: false,
-          }}
-          className="relative max-w-6xl mx-auto px-4"
-        >
+        <Carousel opts={{ align: "center", loop: false }} className="relative max-w-6xl mx-auto px-4">
           <CarouselContent>
             {Agenda.map((event) => (
-              <CarouselItem
-                key={event.id}
-                className="md:basis-1/3 lg:basis-2/6 px-4"
-              >
+              <CarouselItem key={event.id} className="md:basis-1/3 lg:basis-2/6 px-4">
                 <motion.div
                   {...fadeInUp}
                   transition={{ delay: event.id * 0.1 }}
-                  className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
+                  onClick={() => setSelectedEvent(event)}
+                  className="cursor-pointer bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300"
                 >
                   <img
-                    src={event.img_path? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
+                    src={event.img_path ? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
                     alt={event.title}
                     className="w-full h-110 object-contain"
                   />
                   <div className="p-5 flex flex-col justify-start gap-6 min-h-[220px]">
-                    <div className='flex gap-4 items-center' >
-                      <CalendarClock/>
+                    <div className='flex gap-4 items-center'>
+                      <CalendarClock />
                       <div className='flex flex-col justify-start items-start'>
-                      <h1 className="text-lg font-semibold  text-zinc-900">{intParaDiaSemana(event.day_week)}</h1>
-                      <h1 className="text-lg   text-zinc-900">{event.hour}</h1>
+                        <h1 className="text-lg font-semibold text-zinc-900">{intParaDiaSemana(event.day_week)}</h1>
+                        <h1 className="text-lg text-zinc-900">{event.hour}</h1>
                       </div>
-                      
                     </div>
                     <div className='text-start'>
-                      <h3 className="text-lg font-semibold mb-2 text-zinc-900">
-                        {event.title}
-                      </h3>
-                      <p className="text-sm text-zinc-600 line-clamp-3">
-                        {event.description}
-                      </p>
+                      <h3 className="text-lg font-semibold mb-2 text-zinc-900">{event.title}</h3>
+                      <p className="text-sm text-zinc-600 line-clamp-3">{event.description}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -142,67 +121,99 @@ const Events = () => {
             ))}
           </CarouselContent>
 
-          {/* Botões */}
           <CarouselPrevious className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-primary/80 hover:bg-primary text-white border-0 shadow-lg" />
           <CarouselNext className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-primary/80 hover:bg-primary text-white border-0 shadow-lg" />
         </Carousel>
       </section>
 
       {/* EVENTOS ESPECIAIS */}
-      <section className="p-10 md:p-16 text-secondary mx-auto bg-primary w-[100dvw]" >
+      <section className="p-10 md:p-16 text-secondary mx-auto bg-primary w-[100dvw]">
         <motion.h2 variants={fadeInUp} className="text-4xl font-bold mb-10 text-center border-b-4 border-secondary inline-block pb-2">
           Próximos Eventos Especiais
         </motion.h2>
 
-        {/* LISTA DE EVENTOS */}
-        <div className="space-y-6 ">
-          {filteredEvents.length > 0 ? (
-            (
-              <Carousel opts={{ align: "start", loop: true }} className="relative max-w-5xl mx-auto">
-                <CarouselContent>
-                  {filteredEvents.map((event, i) => (
-                    <CarouselItem key={i} className="md:basis-3/3 lg:basis-3/3 px-3">
-                      <motion.div
-                        {...fadeInUp}
-                        transition={{ delay: i * 0.2 }}
-                        className="bg-white/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
-                      >
-                        <img
-                          src={event.img_path? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
-                          alt={event.title}
-                          className="w-full h-140 object-contain"
-                        />
-                        <div className="p-6">
-                          <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-                          <p className="text-sm opacity-90 mb-4">
-                            {event.description}
-                          </p>
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            onClick={() => navigate(`/events/${event.id}`)}
-                            className="hover:scale-105 transition-transform"
-                          >
-                            Ver detalhes
-                          </Button>
-                        </div>
-                      </motion.div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="absolute top-1/2 bg-white/20 hover:bg-white/30 text-white border-0" />
-                <CarouselNext className="absolute top-1/2 bg-white/20 hover:bg-white/30 text-white border-0" />
-              </Carousel>
-            )
-
+        <div className="space-y-6">
+          {eventos.length > 0 ? (
+            <Carousel opts={{ align: "start", loop: true }} className="relative max-w-5xl mx-auto">
+              <CarouselContent>
+                {eventos.map((event, i) => (
+                  <CarouselItem key={i} className="md:basis-3/3 lg:basis-3/3 px-3">
+                    <motion.div
+                      {...fadeInUp}
+                      transition={{ delay: i * 0.2 }}
+                      className="bg-white/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                    >
+                      <img
+                        src={event.img_path ? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
+                        alt={event.title}
+                        className="w-full h-140 object-contain p-4"
+                      />
+                      <div className="p-6">
+                        <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
+                        <p className="text-sm opacity-90 mb-4">{event.description}</p>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          onClick={() => navigate(`/events/${event.id}`)}
+                          className="hover:scale-105 transition-transform"
+                        >
+                          Ver detalhes
+                        </Button>
+                      </div>
+                    </motion.div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="absolute top-1/2 bg-white/20 hover:bg-white/30 text-white border-0" />
+              <CarouselNext className="absolute top-1/2 bg-white/20 hover:bg-white/30 text-white border-0" />
+            </Carousel>
           ) : (
             <motion.p variants={fadeInUp} className="text-center text-lg text-zinc-700 bg-white p-8 border border-zinc-200 rounded-lg">
               Nenhum evento encontrado para esta data.
             </motion.p>
           )}
         </div>
-      </section >
-    </motion.div >
+      </section>
+
+      {/* MODAL DO CULTO */}
+      <AnimatePresence>
+        {selectedEvent && (
+          <motion.div
+            className="fixed inset-0 bg-black/70 flex items-center justify-center z-[999]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white rounded-2xl shadow-xl max-w-6xl w-full mx-4 p-6 relative overflow-hidden"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+            >
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => setSelectedEvent(null)}
+                className="absolute top-4 right-4 text-zinc-700 hover:text-zinc-900"
+              >
+                <X className="w-6 h-6" />
+              </Button>
+              <img
+                src={selectedEvent.img_path || `https://placehold.co/600x400?text=${selectedEvent.title}`}
+                alt={selectedEvent.title}
+                className="max-w-6xl w-full h-[60dvh] object-contain rounded-xl mb-4"
+              />
+              <h2 className="text-2xl font-bold mb-2">{selectedEvent.title}</h2>
+              <p className="text-zinc-600 mb-2">
+                <CalendarClock className="inline mr-2" />
+                {intParaDiaSemana(selectedEvent.day_week)} — {selectedEvent.hour}
+              </p>
+              <p className="text-zinc-700 leading-relaxed">{selectedEvent.description}</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 };
 
