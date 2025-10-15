@@ -6,7 +6,6 @@ import { supabase } from '@/lib/supabaseClient';
 
 // --- DADOS MOCKADOS ---
 const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@suaigreja'; // Substitua pelo seu @nome
-const LAST_VIDEO_ID = 'dQw4w9WgXcQ'; // ID de um vídeo placeholder. Substitua pelo ID do último vídeo ou live.
 const IS_LIVE_NOW = false; // Simula o status: true se estiver ao vivo, false caso contrário.
 
 // --- COMPONENTE PRINCIPAL ---
