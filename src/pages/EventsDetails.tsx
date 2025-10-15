@@ -58,7 +58,7 @@ export default function EventDetails() {
         <motion.img
           src={event.img_path? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
           alt={event.title}
-          className="w-full h-[400px] object-cover"
+          className="w-full h-140  object-cover"
           initial={{ scale: 1.05 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}

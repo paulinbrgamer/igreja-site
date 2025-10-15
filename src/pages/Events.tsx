@@ -56,7 +56,7 @@ const Events = () => {
 
   useEffect(() => {
     const fetchAgenda = async () => {
-      const { data, error } = await supabase.from('semanal').select("*").order("day_week");
+      const { data, error } = await supabase.from('semanal').select("*").order("day_week").order("hour");
       if (!error && data) {
         setAgenda(data)
       }
@@ -117,7 +117,7 @@ const Events = () => {
                   <img
                     src={event.img_path? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
                     alt={event.title}
-                    className="w-full h-100 object-cover"
+                    className="w-full h-110 object-contain"
                   />
                   <div className="p-5 flex flex-col justify-start gap-6 min-h-[220px]">
                     <div className='flex gap-4 items-center' >
@@ -154,28 +154,6 @@ const Events = () => {
           Próximos Eventos Especiais
         </motion.h2>
 
-        {/* FILTRO */}
-        <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-10  p-4 rounded-lg shadow-sm">
-          <Filter className="w-5 h-5 text-white" />
-          <label htmlFor="filter-date" className="text-base font-semibold whitespace-nowrap">Filtrar por data:</label>
-          <input
-            id="filter-date"
-            type="date"
-            value={filterDate}
-            onChange={(e) => setFilterDate(e.target.value)}
-            className="p-2 border border-zinc-400 rounded-md bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-black text-zinc-900"
-          />
-          {filterDate && (
-            <Button
-              variant="ghost"
-              onClick={() => setFilterDate('')}
-              className="flex items-center text-red-600 hover:bg-zinc-100"
-            >
-              <X className="w-4 h-4 mr-1" /> Limpar
-            </Button>
-          )}
-        </div>
-
         {/* LISTA DE EVENTOS */}
         <div className="space-y-6 ">
           {filteredEvents.length > 0 ? (
@@ -192,7 +170,7 @@ const Events = () => {
                         <img
                           src={event.img_path? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
                           alt={event.title}
-                          className="w-full h-100 object-cover"
+                          className="w-full h-140 object-contain"
                         />
                         <div className="p-6">
                           <h3 className="text-xl font-semibold mb-2">{event.title}</h3>

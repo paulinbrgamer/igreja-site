@@ -21,55 +21,55 @@ const Home = () => {
   const navigate = useNavigate();
   const [eventos, setEventos] = useState<any>([])
   useEffect(() => {
-    const fetchEventos= async () => {
-          const { data, error } = await supabase.from('eventos').select("*").order("date");
-          if (!error && data) {
-            setEventos(data)
-          }
-        };
-        fetchEventos()
+    const fetchEventos = async () => {
+      const { data, error } = await supabase.from('eventos').select("*").order("date");
+      if (!error && data) {
+        setEventos(data)
+      }
+    };
+    fetchEventos()
   }, [])
-  
+
   return (
     <div className="flex flex-col w-full">
       <section className="py-24 bg-zinc-900 text-zinc-900 text-center px-6">
-      <Carousel opts={{ align: "start", loop: true }} className="relative max-w-5xl mx-auto">
-        <CarouselContent>
-          {eventos.map((event : any) => (
-            <CarouselItem key={event.id} className="md:basis-3/3 lg:basis-3/3 px-3 text-secondary">
-              <motion.div
-                {...fadeInUp}
-                transition={{ delay: event.id * 0.2 }}
-                className="bg-white/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
-              >
-                <img
-                  src={event.img_path? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
-                  alt={event.title}
-                  className="w-full h-100 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-                  <p className="text-sm opacity-90 mb-4">
-                    {event.description}
-                  </p>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => navigate(`/events/${event.id}`)}
-                    className="hover:scale-105 transition-transform"
-                  >
-                    Ver detalhes
-                  </Button>
-                </div>
-              </motion.div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious className="absolute top-1/2 bg-white/20 hover:bg-white/30 text-white border-0" />
-        <CarouselNext className="absolute top-1/2 bg-white/20 hover:bg-white/30 text-white border-0" />
-      </Carousel>
+        <Carousel opts={{ align: "start", loop: true }} className="relative max-w-5xl mx-auto">
+          <CarouselContent>
+            {eventos.map((event: any) => (
+              <CarouselItem key={event.id} className="md:basis-3/3 lg:basis-3/3 px-3 text-secondary">
+                <motion.div
+                  {...fadeInUp}
+                  transition={{ delay: event.id * 0.2 }}
+                  className="bg-white/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                >
+                  <img
+                    src={event.img_path ? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
+                    alt={event.title}
+                    className="w-full h-140 object-contain sm:p-4"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
+                    <p className="text-sm opacity-90 mb-4">
+                      {event.description}
+                    </p>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => navigate(`/events/${event.id}`)}
+                      className="hover:scale-105 transition-transform"
+                    >
+                      Ver detalhes
+                    </Button>
+                  </div>
+                </motion.div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="absolute top-1/2 bg-white/20 hover:bg-white/30 text-white border-0" />
+          <CarouselNext className="absolute top-1/2 bg-white/20 hover:bg-white/30 text-white border-0" />
+        </Carousel>
       </section>
-      
+
 
       {/* === SOBRE === */}
       <section className="py-24 bg-zinc-50 text-zinc-900 text-center px-6">
@@ -85,7 +85,6 @@ const Home = () => {
           </Button>
         </motion.div>
       </section>
-
 
 
       {/* === AO VIVO === */}

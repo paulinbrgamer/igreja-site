@@ -1,13 +1,14 @@
 import { type FC, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Clock,  Link, Trash2, Plus } from "lucide-react"; // Adicionei ícones úteis
+import { Clock, Link, Trash2, Plus } from "lucide-react"; // Adicionei ícones úteis
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"; // Importado Card
 import { Input } from "@/components/ui/input"; // Importado Input
 import { Separator } from "@/components/ui/separator"; // Importado Separator
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { supabase } from "@/lib/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { intParaDiaSemana } from "@/pages/Events";
 
 // --- INTERFACES (Mantidas) ---
 interface agendaSemanal {
@@ -25,7 +26,7 @@ interface eventosSpeciais {
   description: string,
   hour: string,
   address: string,
-  img_path : string
+  img_path: string
 }
 
 interface AdminDashboardProps {
@@ -57,10 +58,15 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout })
     // Aqui você faria a chamada real ao supabase:
     // await supabase.from('settings').update({ live_url: liveLink });
   };
-  const handleRemoveCulto =async (id:number)=>{
-    await supabase.from("semanal").delete().eq('id',id)
-    const newAgenda = Agenda.filter((a)=>a.id!=id)
+  const handleRemoveCulto = async (id: number) => {
+    await supabase.from("semanal").delete().eq('id', id)
+    const newAgenda = Agenda.filter((a) => a.id != id)
     setAgenda(newAgenda)
+  }
+  const handleRemoveEvento = async (id: number) => {
+    await supabase.from("eventos").delete().eq('id', id)
+    const newEventos = eventos!!.filter((a) => a.id != id)
+    setEventos(newEventos)
   }
 
   useEffect(() => {
@@ -161,8 +167,8 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout })
               </CardFooter>
             </Card>
           </motion.div>
-          <Button className="text-xl text-center w-full" onClick={()=>navigate("/addCultoSemanal")}>
-            <Plus/>
+          <Button className="text-xl text-center w-full" onClick={() => navigate("/addCultoSemanal")}>
+            <Plus />
             <p>Adicionar Culto Semanal</p>
           </Button>
         </div>
@@ -180,13 +186,13 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout })
                   <h3 className="text-xl font-bold mb-1">{e.title}</h3>
                   <div className="flex items-center text-zinc-700 text-sm font-medium mb-2">
                     <Clock className="w-4 h-4 mr-2 text-black" />
-                    Dia {e.day_week} — {e.hour}
+                    {intParaDiaSemana(e.day_week)} — {e.hour}
                   </div>
                   <p className="text-xs text-zinc-600 truncate">{e.description}</p>
                   {/* Botão de Edição (Adicionado para UX) */}
-                  <Button onClick={()=>navigate(`/EditCulto/${e.id}`)} variant="link" className="h-auto p-0 text-black hover:text-zinc-600 mt-2">Editar</Button>
-                  <Button onClick={()=>handleRemoveCulto(e.id)} variant="link" className="ml-5 h-auto p-0 text-red-500 hover:text-zinc-600 mt-2">Remover</Button>
-                  
+                  <Button onClick={() => navigate(`/EditCulto/${e.id}`)} variant="link" className="h-auto p-0 text-black hover:text-zinc-600 mt-2">Editar</Button>
+                  <Button onClick={() => handleRemoveCulto(e.id)} variant="link" className="ml-5 h-auto p-0 text-red-500 hover:text-zinc-600 mt-2">Remover</Button>
+
                 </motion.div>
               ))}
             </CardContent>
@@ -201,62 +207,53 @@ export const AdminDashboard: FC<AdminDashboardProps> = ({ userEmail, onLogout })
         <motion.h2 variants={fadeInUp} className="text-4xl font-bold mb-10 text-center border-b-2 border-zinc-300 inline-block pb-2">
           🌟 Eventos Especiais (Datas Únicas)
         </motion.h2>
-        <Button className="text-xl mx-14" onClick={()=>navigate("/addEvent")}>
+        <Button className="text-xl mx-14" onClick={() => navigate("/addEvent")}>
           <Plus />
           Adicionar Evento
         </Button>
-        <div className="max-w-4xl mx-auto px-4">
-          <Carousel
-            opts={{
-              align: "center",
-              loop: true,
-            }}
-            className="relative w-full max-w-6xl mx-auto flex justify-center items-center"
-          >
-            {/* CONTEÚDO DO CARROSSEL */}
-            <CarouselContent className="flex justify-center items-center">
-              {eventos && eventos.map((event, i) => (
-                <CarouselItem
-                  key={i}
-                  className="md:basis-2/3 lg:basis-2/3 p-4 flex justify-center"
+        <Carousel opts={{ align: "start", loop: true }} className="relative max-w-5xl mx-auto">
+          <CarouselContent>
+            {eventos && eventos.map((event) => (
+              <CarouselItem key={event.id} className="md:basis-1/3 lg:basis-1/3 px-3">
+                <motion.div
+                  {...fadeInUp}
+                  transition={{ delay: event.id * 0.2 }}
+                  className="bg-white/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
                 >
-                  <motion.div
-                    {...fadeInUp}
-                    transition={{ delay: i * 0.2 }}
-                    className="bg-white/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 max-w-[360px] w-full flex flex-col"
-                  >
-                    <img
-                      src={event.img_path? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
-                      alt={event.title}
-                      className="w-full h-56 object-cover"
-                    />
-                    <div className="p-6 flex flex-col flex-1 justify-between">
-                      <div>
-                        <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-                        <p className="text-sm opacity-90 mb-4 line-clamp-3">
-                          {event.description}
-                        </p>
-                      </div>
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="hover:scale-105 transition-transform mt-auto"
-                        onClick={()=>navigate(`/EditEvent/${event.id}`)}
-                      >
-                        Editar
-                      </Button>
-                    </div>
-                  </motion.div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-
-            {/* BOTÕES DE NAVEGAÇÃO */}
-            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 bg-primary hover:bg-primary/90 text-white border-0 shadow-lg" />
-            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 bg-primary hover:bg-primary/90 text-white border-0 shadow-lg" />
-          </Carousel>
-
-        </div>
+                  <img
+                    src={event.img_path ? event.img_path : `https://placehold.co/600x400?text=${event.title}`}
+                    alt={event.title}
+                    className="w-full h-80 object-cover"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
+                    <p className="text-sm opacity-90 mb-4">
+                      {event.description}
+                    </p>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => navigate(`/EditEvent/${event.id}`)}
+                      className="hover:scale-105 transition-transform"
+                    >
+                      Editar
+                    </Button>
+                    <Button
+                      variant="link"
+                      size="sm"
+                      onClick={() => handleRemoveEvento(event.id)}
+                      className="hover:scale-105 text-red-500 transition-transform"
+                    >
+                      Remover
+                    </Button>
+                  </div>
+                </motion.div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="absolute top-1/2 bg-primary hover:bg-white/30 text-white border-0" />
+          <CarouselNext className="absolute top-1/2 bg-primary hover:bg-white/30 text-white border-0" />
+        </Carousel>
       </section>
 
     </motion.div>

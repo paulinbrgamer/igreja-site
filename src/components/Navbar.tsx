@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
@@ -18,7 +18,7 @@ const NAV_LINKS = [
 const Navbar = () => {
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false); 
-
+    const navigate = useNavigate()
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
@@ -32,7 +32,7 @@ const Navbar = () => {
                 className="fixed top-0 left-0 w-full z-50 bg-zinc-900 text-white p-4 flex justify-between items-center shadow-2xl"
             >
                 {/* Logo e Título */}
-                <div className="flex items-center">
+                <div className="flex items-center cursor-pointer" onClick={()=>navigate("/")}>
                     <img src="icon-igreja.png" alt="Logo da Igreja" className="h-10 mx-auto mr-2"/>
                     <h1 className="text-xl lg:text-2xl font-bold whitespace-nowrap">
                         Igreja Batista Karismática
