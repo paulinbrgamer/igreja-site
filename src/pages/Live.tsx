@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 
 // --- DADOS MOCKADOS ---
-const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@suaigreja'; // Substitua pelo seu @nome
+const YOUTUBE_CHANNEL_URL = 'https://www.youtube.com/@BatistaKarismaticaoficia'; // Substitua pelo seu @nome
 const IS_LIVE_NOW = false; // Simula o status: true se estiver ao vivo, false caso contrário.
 
 // --- COMPONENTE PRINCIPAL ---

@@ -3,7 +3,7 @@ import { Phone, MapPin, Clock, MessageCircle, InstagramIcon, LucideYoutube } fro
 import { Button } from "@/components/ui/button";
 
 const CONTACT_DATA = {
-  address: 'RUA CORONEL RAIMUNDO LEÃO N° 1518 - BRASÍLIA, *ANTIGO MILÊNIO - CAMETÁ/PA',
+  address: 'Travessa Dom Pedro I, 290 Brasília, Cametá-PA',
   phones: [
     { label: 'Vivo', numbers: ['(91) 99356-0582', '(91) 99356-0592', '(91) 99356-6765'] },
     { label: 'Claro', numbers: ['(91) 98583-9909', '(91) 98547-0959', '(91) 98547-0961'] },
@@ -11,8 +11,8 @@ const CONTACT_DATA = {
   whatsapp: '(91) 99353-9594',
   prayerCenter: 'A qualquer hora do dia, da noite, ou da madrugada, alguém preparado para te atender, te ouvir e orar forte por você!',
   social: [
-    { name: 'Instagram', icon: InstagramIcon, url: 'https://www.instagram.com/suaigreja/' },
-    { name: 'YouTube', icon: LucideYoutube, url: 'https://www.youtube.com/suaigreja' },
+    { name: 'Instagram', icon: InstagramIcon, url: 'https://www.instagram.com/batista_karismatica_oficial/' },
+    { name: 'YouTube', icon: LucideYoutube, url: 'https://www.youtube.com/@BatistaKarismaticaoficia' },
   ],
 };
 
